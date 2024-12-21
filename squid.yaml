@@ -13,3 +13,7 @@ deploy:
     cmd:
       - node
       - lib/main.js
+  api:
+    cmd:
+      - sqd
+      - api:prod

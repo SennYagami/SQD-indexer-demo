@@ -1,4 +1,4 @@
-import {Codec, struct, u8, u128, u64, bool, i128, fixedArray, address, unit, sum, u16, i32, ref} from '@subsquid/borsh'
+import {Codec, struct, u8, u128, u64, bool, i128, fixedArray, address, ref, array, unit, sum, u16, i32} from '@subsquid/borsh'
 
 export interface OpenPositionBumps {
     positionBump: number
@@ -68,6 +68,24 @@ export interface WhirlpoolBumps {
 
 export const WhirlpoolBumps: Codec<WhirlpoolBumps> = struct({
     whirlpoolBump: u8,
+})
+
+export interface RemainingAccountsSlice {
+    accountsType: AccountsType
+    length: number
+}
+
+export const RemainingAccountsSlice: Codec<RemainingAccountsSlice> = struct({
+    accountsType: ref(() => AccountsType),
+    length: u8,
+})
+
+export interface RemainingAccountsInfo {
+    slices: Array<RemainingAccountsSlice>
+}
+
+export const RemainingAccountsInfo: Codec<RemainingAccountsInfo> = struct({
+    slices: array(ref(() => RemainingAccountsSlice)),
 })
 
 export type CurrIndex_Below = undefined
@@ -169,6 +187,131 @@ export const Direction: Codec<Direction> = sum(1, {
     },
 })
 
+export type AccountsType_TransferHookA = undefined
+
+export const AccountsType_TransferHookA = unit
+
+export type AccountsType_TransferHookB = undefined
+
+export const AccountsType_TransferHookB = unit
+
+export type AccountsType_TransferHookReward = undefined
+
+export const AccountsType_TransferHookReward = unit
+
+export type AccountsType_TransferHookInput = undefined
+
+export const AccountsType_TransferHookInput = unit
+
+export type AccountsType_TransferHookIntermediate = undefined
+
+export const AccountsType_TransferHookIntermediate = unit
+
+export type AccountsType_TransferHookOutput = undefined
+
+export const AccountsType_TransferHookOutput = unit
+
+export type AccountsType_SupplementalTickArrays = undefined
+
+export const AccountsType_SupplementalTickArrays = unit
+
+export type AccountsType_SupplementalTickArraysOne = undefined
+
+export const AccountsType_SupplementalTickArraysOne = unit
+
+export type AccountsType_SupplementalTickArraysTwo = undefined
+
+export const AccountsType_SupplementalTickArraysTwo = unit
+
+export type AccountsType = 
+    | {
+        kind: 'TransferHookA'
+        value?: AccountsType_TransferHookA
+      }
+    | {
+        kind: 'TransferHookB'
+        value?: AccountsType_TransferHookB
+      }
+    | {
+        kind: 'TransferHookReward'
+        value?: AccountsType_TransferHookReward
+      }
+    | {
+        kind: 'TransferHookInput'
+        value?: AccountsType_TransferHookInput
+      }
+    | {
+        kind: 'TransferHookIntermediate'
+        value?: AccountsType_TransferHookIntermediate
+      }
+    | {
+        kind: 'TransferHookOutput'
+        value?: AccountsType_TransferHookOutput
+      }
+    | {
+        kind: 'SupplementalTickArrays'
+        value?: AccountsType_SupplementalTickArrays
+      }
+    | {
+        kind: 'SupplementalTickArraysOne'
+        value?: AccountsType_SupplementalTickArraysOne
+      }
+    | {
+        kind: 'SupplementalTickArraysTwo'
+        value?: AccountsType_SupplementalTickArraysTwo
+      }
+
+export const AccountsType: Codec<AccountsType> = sum(1, {
+    TransferHookA: {
+        discriminator: 0,
+        value: AccountsType_TransferHookA,
+    },
+    TransferHookB: {
+        discriminator: 1,
+        value: AccountsType_TransferHookB,
+    },
+    TransferHookReward: {
+        discriminator: 2,
+        value: AccountsType_TransferHookReward,
+    },
+    TransferHookInput: {
+        discriminator: 3,
+        value: AccountsType_TransferHookInput,
+    },
+    TransferHookIntermediate: {
+        discriminator: 4,
+        value: AccountsType_TransferHookIntermediate,
+    },
+    TransferHookOutput: {
+        discriminator: 5,
+        value: AccountsType_TransferHookOutput,
+    },
+    SupplementalTickArrays: {
+        discriminator: 6,
+        value: AccountsType_SupplementalTickArrays,
+    },
+    SupplementalTickArraysOne: {
+        discriminator: 7,
+        value: AccountsType_SupplementalTickArraysOne,
+    },
+    SupplementalTickArraysTwo: {
+        discriminator: 8,
+        value: AccountsType_SupplementalTickArraysTwo,
+    },
+})
+
+export interface WhirlpoolsConfigExtension {
+    whirlpoolsConfig: string
+    configExtensionAuthority: string
+    tokenBadgeAuthority: string
+}
+
+export const WhirlpoolsConfigExtension: Codec<WhirlpoolsConfigExtension> = struct({
+    whirlpoolsConfig: address,
+    configExtensionAuthority: address,
+    tokenBadgeAuthority: address,
+})
+
 export interface WhirlpoolsConfig {
     feeAuthority: string
     collectProtocolFeesAuthority: string
@@ -241,6 +384,16 @@ export const TickArray: Codec<TickArray> = struct({
     startTickIndex: i32,
     ticks: fixedArray(ref(() => Tick), 88),
     whirlpool: address,
+})
+
+export interface TokenBadge {
+    whirlpoolsConfig: string
+    tokenMint: string
+}
+
+export const TokenBadge: Codec<TokenBadge> = struct({
+    whirlpoolsConfig: address,
+    tokenMint: address,
 })
 
 export interface Whirlpool {
